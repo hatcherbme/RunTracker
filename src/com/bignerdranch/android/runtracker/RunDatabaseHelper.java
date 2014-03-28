@@ -24,6 +24,15 @@ public class RunDatabaseHelper extends SQLiteOpenHelper {
 	private static final String COLUMN_LOCATION_TIMESTAMP = "timestamp";
 	private static final String COLUMN_LOCATION_PROVIDER = "provider";
 	private static final String COLUMN_LOCATION_RUN_ID = "run_id";
+
+	public LocationCursor queryLocationsForRun(long runId) {
+		Cursor wrapped = getReadableDatabase().query(TABLE_LOCATION, null,
+				COLUMN_LOCATION_RUN_ID + " = ?", // Limit to the given run
+				new String[] { String.valueOf(runId) }, null, // group by
+				null, // having
+				COLUMN_LOCATION_TIMESTAMP + " asc"); // order by timestamp
+		return new LocationCursor(wrapped);
+	}
 	
 	public LocationCursor queryLastLocationForRun(long runId) {
 		Cursor wrapped = getReadableDatabase().query(TABLE_LOCATION, null, // All
